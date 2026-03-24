@@ -140,6 +140,10 @@ const TodoList = () => {
                       ].map((item) => (
                         <div
                           key={item.value}
+                          onClick={() => {
+                            setPriority(item.value);
+                            setPrioVis(false);
+                          }}
                           className={clsx(
                             'hover:bg-white/5 flex items-center rounded-xl',
                             'gap-3 px-2 py-2 transition duration-300 cursor-pointer',
@@ -176,7 +180,7 @@ const TodoList = () => {
                     )}
                   />
                   <span className="flex-1 text-left group/repeat-hover:text-white group/repeat-hover:drop-shadow-[0_0_5px_white] transition">
-                    {repeatLabels[priority - 1]}
+                    {repeatLabels[repeat]}
                   </span>
                 </button>
                 {repVis && (
@@ -188,12 +192,16 @@ const TodoList = () => {
                     )}
                   >
                     <h1 className="text-[#9ab3d5] text-xs font-medium px-2 py-1 mb-1">
-                      Set Repeatt
+                      Set Repeat
                     </h1>
                     <div>
                       {repeatLabels.map((item, i) => (
                         <div
                           key={i}
+                          onClick={() => {
+                            setRepeat(i);
+                            setRepVis(false);
+                          }}
                           className={clsx(
                             'hover:bg-white/5 flex items-center rounded-xl',
                             'gap-3 px-2 py-2 transition duration-300 cursor-pointer',
@@ -202,12 +210,25 @@ const TodoList = () => {
                             }
                           )}
                         >
+                          <RefreshCw className={clsx('w-4 text-blue-400')} />
                           <h1>{item}</h1>
                         </div>
                       ))}
                     </div>
                   </div>
                 )}
+                <button
+                  type="submit"
+                  disabled={!name.trim()}
+                  className={clsx(
+                    'bg-blue-600 p-3 rounded-xl transition duration-300 ',
+                    ' hover:bg-blue-500/95 hover:scale-110 cursor-pointer',
+                    'disabled:hover:bg-blue-600/50 disabled:hover:scale-100',
+                    ' disabled:bg-blue-600/50 disabled:cursor-auto'
+                  )}
+                >
+                  <Plus />
+                </button>
               </div>
             </div>
           </form>
