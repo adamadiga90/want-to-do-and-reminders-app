@@ -188,7 +188,7 @@ const TodoList = () => {
                     )}
                   >
                     <h1 className="text-[#9ab3d5] text-xs font-medium px-2 py-1 mb-1">
-                      Set Repeat
+                      Set Repeatt
                     </h1>
                     <div>
                       {repeatLabels.map((item, i) => (
