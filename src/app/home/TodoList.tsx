@@ -7,6 +7,7 @@ import Todos from '../components/Todos';
 import { useFirebase } from '../Provider/FirebaseProvider';
 import clsx from 'clsx';
 import { Flag, RefreshCw, Plus, X } from 'lucide-react';
+import { useCheckDaysToEnd } from '../AppContext';
 
 const TodoList = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -17,27 +18,25 @@ const TodoList = () => {
   const [repVis, setRepVis] = useState(false);
 
   const { addTodo } = useFirebase();
+  const allData = useCheckDaysToEnd();
+  console.log(allData);
 
   const prioRef = useRef<HTMLDivElement>(null);
   const repRef = useRef<HTMLDivElement>(null);
 
-  const handleAddTodo = async (e: React.FormEvent) => {
+  const newRepeat = { value: repeat, repeatData: allData };
+  console.log(newRepeat);
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (!name.trim()) return;
-    addTodo({ name, priority, repeat });
+    addTodo({ name, priority, repeat: newRepeat });
     setName('');
     setPriority(1);
     setRepeat(0);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    addTodo({ name });
-    setName('');
-  };
-
   const priorityLabels = ['High', 'Medium', 'Low'];
-  const repeatLabels = ['None', 'Daily', 'Weekly', 'Monthly'];
+  const repeatLabels = ['None', 'Daily', '2 Days', '3 Days'];
   return (
     <div className={clsx('relative min-h-screen bg-[#0a0c10] flex justify-center p-4')}>
       <div className={clsx('max-w-lg w-full relative')}>
@@ -50,7 +49,6 @@ const TodoList = () => {
           <div className="text-center mb-8">
             <h1 className="text-2xl text-balance text-[#eef5ff] font-bold">My Tasks</h1>
           </div>
-          {/* TODO: handleSubmit function */}
           <form className="flex justify-center w-full" onSubmit={(e) => handleSubmit(e)}>
             <div className="relative group w-full ">
               <input
@@ -110,7 +108,7 @@ const TodoList = () => {
                   <div
                     className={clsx(
                       'absolute p-4 flex left-0 right-0 top-full border-2',
-                      'justify-center border-blue-400/20 ',
+                      'justify-center border-blue-400/20 z-10  ',
                       'flex-col w-[50%] rounded-2xl mt-2 bg-[#0a0c10]'
                     )}
                   >
@@ -188,7 +186,7 @@ const TodoList = () => {
                     className={clsx(
                       'absolute p-4 flex left-56.5 top-full border-2',
                       'justify-center border-blue-400/20 ',
-                      'flex-col w-[50%] rounded-2xl mt-2 bg-[#0a0c10]'
+                      'flex-col w-[50%] z-10 rounded-2xl mt-2 bg-[#0a0c10]'
                     )}
                   >
                     <h1 className="text-[#9ab3d5] text-xs font-medium px-2 py-1 mb-1">
@@ -200,6 +198,7 @@ const TodoList = () => {
                           key={i}
                           onClick={() => {
                             setRepeat(i);
+                            // i === 0 ? setRepeat(i) : setRepeat([i]);
                             setRepVis(false);
                           }}
                           className={clsx(
@@ -232,6 +231,12 @@ const TodoList = () => {
               </div>
             </div>
           </form>
+          <div
+            className={clsx(
+              'mt-5 bg-gradient-to-r from-transparent via-blue-800 to-transparent w-full h-px'
+            )}
+          />
+          <Todos />
         </div>
       </div>
     </div>

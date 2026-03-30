@@ -52,8 +52,9 @@ const AppContextProvider = ({ children }) => {
 
     daysToEndCount = daysToEndCount - date;
     const daysCount = 365 - daysToEndCount;
-
-    return [daysCount, daysToEndCount, days, year];
+    const allData = [daysCount, daysToEndCount, days, year];
+    return allData;
+    // return [daysCount, daysToEndCount, days, year];
   }
 
   useEffect(() => {

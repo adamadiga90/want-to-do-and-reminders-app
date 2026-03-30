@@ -1,7 +1,7 @@
 'use client';
 import React, { useContext, useEffect, useState } from 'react';
 import { db } from '../firebase';
-import { collection, addDoc, onSnapshot, deleteDoc, doc } from 'firebase/firestore';
+import { collection, addDoc, onSnapshot, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 
 const FirebaseContext = React.createContext();
 
@@ -9,7 +9,7 @@ type Todo = {
   name: string;
   isComplete: boolean;
   id: string;
-  priority: number;
+  priority: { value: number; allData: any };
 };
 
 export const FirebaseProvider = ({ children }) => {
@@ -18,7 +18,7 @@ export const FirebaseProvider = ({ children }) => {
 
   useEffect(() => {
     setloading(true);
-    const unsubscibe = onSnapshot(collection(db, 'todo'), (snapshot) => {
+    const unsubscribe = onSnapshot(collection(db, 'todo'), (snapshot) => {
       const todosData = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
@@ -26,22 +26,37 @@ export const FirebaseProvider = ({ children }) => {
       setTodos(todosData);
       setloading(false);
     });
-    return () => unsubscibe();
+    return () => unsubscribe();
   }, []);
-  console.log(todos);
+
+  // useEffect(() => {
+  //   const unsubscribe = onSnapshot(collection(db, 'todo'), (snapshot) => {
+  //     const todosData = snapshot.docs.map((doc) => ({
+  //       id: doc.id,
+  //       ...doc.data(),
+  //     }));
+  //   });
+  //   return () => unsubscribe();
+  // }, []);
   const addTodo = async ({ name, priority, repeat }) => {
     await addDoc(collection(db, 'todo'), {
       name: name,
       isComplete: false,
-      priority: priority || '',
-      repeat: repeat || '',
+      priority: priority || priority,
+      repeat: repeat || repeat,
     });
   };
   const deleteTodo = async (id: number) => {
     await deleteDoc(doc(db, 'todo', id));
   };
+  const toggleComplete = async (id: number, currentStatus: boolean) => {
+    const todoRef = doc(db, 'todo', id);
+    await updateDoc(todoRef, {
+      isComplete: !currentStatus,
+    });
+  };
   return (
-    <FirebaseContext.Provider value={{ todos, addTodo, deleteTodo }}>
+    <FirebaseContext.Provider value={{ todos, addTodo, deleteTodo, loading, toggleComplete }}>
       {children}
     </FirebaseContext.Provider>
   );
