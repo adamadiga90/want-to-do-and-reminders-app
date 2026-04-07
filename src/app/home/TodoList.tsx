@@ -19,17 +19,15 @@ const TodoList = () => {
 
   const { addTodo } = useFirebase();
   const allData = useCheckDaysToEnd();
-  console.log(allData);
 
   const prioRef = useRef<HTMLDivElement>(null);
   const repRef = useRef<HTMLDivElement>(null);
 
-  const newRepeat = { value: repeat, repeatData: allData };
-  console.log(newRepeat);
+  // const newRepeat = { value: repeat, repeatData: allData };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addTodo({ name, priority, repeat: newRepeat });
+    addTodo({ name, priority, repeat });
     setName('');
     setPriority(1);
     setRepeat(0);
