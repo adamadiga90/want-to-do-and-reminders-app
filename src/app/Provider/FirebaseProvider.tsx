@@ -69,7 +69,9 @@ export const FirebaseProvider = ({ children }) => {
       console.log(e);
     }
   };
-  upadteName();
+  useEffect(() => {
+    upadteName();
+  }, []);
   const addTodo = async ({ name, priority, repeat }) => {
     await addDoc(collection(db, 'todo'), {
       name: name,
