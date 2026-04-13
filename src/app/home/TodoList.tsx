@@ -23,8 +23,6 @@ const TodoList = () => {
   const prioRef = useRef<HTMLDivElement>(null);
   const repRef = useRef<HTMLDivElement>(null);
 
-  // const newRepeat = { value: repeat, repeatData: allData };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     addTodo({ name, priority, repeat });
