@@ -21,8 +21,12 @@ body {
     'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #010e07;
-  color: #d5fcea;
+  background:
+    radial-gradient(1200px 600px at 10% 10%, rgba(84, 46, 248, 0.08), transparent),
+    radial-gradient(1000px 500px at 90% 90%, rgba(153, 135, 229, 0.04), transparent), #030614;
+  color: #e6f7ff;
+  font-size: 15px;
+  line-height: 1.4;
 }
 
 code {

@@ -14,6 +14,12 @@ import {
 
 const FirebaseContext = React.createContext();
 
+type DailyTask = {
+  name: string;
+  isComplete: boolean;
+  id: string;
+};
+
 type Todo = {
   name: string;
   isComplete: boolean;
@@ -24,6 +30,12 @@ const theDay = Math.floor(Date.now() / 1000 / 60 / 60 / 24);
 export const FirebaseProvider = ({ children }) => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [loading, setloading] = useState<boolean>(false);
+  const [dailyTasks, setDailyTasks] = useState<DailyTask[]>([]);
+  const addDailyTask = async ({ name }) => {
+    await addDoc(collection(db, 'dailyTasks'), {
+      name: name,
+    });
+  };
 
   useEffect(() => {
     setloading(true);
@@ -89,8 +101,19 @@ export const FirebaseProvider = ({ children }) => {
       isComplete: !currentStatus,
     });
   };
+  useEffect(() => {
+    const subsucribe = onSnapshot(collection(db, 'dailyTasks'), (snapshot) => {
+      const dailyTasksData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setDailyTasks(dailyTasksData);
+    });
+  }, []);
   return (
-    <FirebaseContext.Provider value={{ todos, addTodo, deleteTodo, loading, toggleComplete }}>
+    <FirebaseContext.Provider
+      value={{ todos, addTodo, deleteTodo, loading, toggleComplete, addDailyTask, dailyTasks }}
+    >
       {children}
     </FirebaseContext.Provider>
   );

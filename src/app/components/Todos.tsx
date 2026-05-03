@@ -121,7 +121,7 @@ const Todos = () => {
   };
 
   if (loading) {
-    <div>Loading....</div>;
+    return <div className="text-center py-8 text-sm text-gray-300">Loading...</div>;
   }
 
   return (
