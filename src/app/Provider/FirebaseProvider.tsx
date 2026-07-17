@@ -31,9 +31,13 @@ export const FirebaseProvider = ({ children }) => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [loading, setloading] = useState<boolean>(false);
   const [dailyTasks, setDailyTasks] = useState<DailyTask[]>([]);
-  const addDailyTask = async ({ name }) => {
+  const addDailyTask = async ({ name, comment, percent }) => {
     await addDoc(collection(db, 'dailyTasks'), {
       name: name,
+      comment: comment,
+      percent: percent,
+      isComplete: false,
+      date: theDay,
     });
   };
 
@@ -49,6 +53,25 @@ export const FirebaseProvider = ({ children }) => {
     });
     return () => unsubscribe();
   }, []);
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, 'dailyTasks'), (snapshot) => {
+      const dailyTasksData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setDailyTasks(dailyTasksData);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const editeDailyTask = async (id: string, name: string, comment: string, percent: number) => {
+    try {
+      const docRef = doc(db, 'dailyTasks', id);
+      await updateDoc(docRef, { name, comment, percent });
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const upadteName = async () => {
     try {
@@ -57,10 +80,7 @@ export const FirebaseProvider = ({ children }) => {
 
       querySnapshot.forEach(async (document) => {
         const currentData = document.data();
-        // console.log(
-        //   `rpeat: ${currentData.repeat}, repeatNumber:${currentData.repeat[1] + currentData.repeat[0]}`
-        // );
-        // console.log(currentData.repeat[1] === theDay);
+
         if (
           currentData.isComplete &&
           currentData.repeat[0] !== 0 &&
@@ -92,6 +112,9 @@ export const FirebaseProvider = ({ children }) => {
       repeat: [repeat, theDay],
     });
   };
+  const deleteDailyTask = async (id: string) => {
+    await deleteDoc(doc(db, 'dailyTasks', id));
+  };
   const deleteTodo = async (id: number) => {
     await deleteDoc(doc(db, 'todo', id));
   };
@@ -101,18 +124,20 @@ export const FirebaseProvider = ({ children }) => {
       isComplete: !currentStatus,
     });
   };
-  useEffect(() => {
-    const subsucribe = onSnapshot(collection(db, 'dailyTasks'), (snapshot) => {
-      const dailyTasksData = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setDailyTasks(dailyTasksData);
-    });
-  }, []);
+
   return (
     <FirebaseContext.Provider
-      value={{ todos, addTodo, deleteTodo, loading, toggleComplete, addDailyTask, dailyTasks }}
+      value={{
+        todos,
+        addTodo,
+        deleteTodo,
+        loading,
+        toggleComplete,
+        addDailyTask,
+        dailyTasks,
+        deleteDailyTask,
+        editeDailyTask,
+      }}
     >
       {children}
     </FirebaseContext.Provider>
