@@ -25,6 +25,7 @@ const TodoList = () => {
 
   const priorityLabels = ['High', 'Medium', 'Low'];
   const repeatLabels = ['None', 'Daily', '2 Days', '3 Days'];
+
   return (
     <div className={clsx('relative min-h-screen bg-[#0a0c10] flex justify-center p-4')}>
       <div className={clsx('max-w-lg w-full relative')}>

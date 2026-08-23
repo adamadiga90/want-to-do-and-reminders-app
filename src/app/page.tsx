@@ -8,7 +8,7 @@ const page = () => {
   return (
     <AppContextProvider>
       <FirebaseProvider>
-        <div className="flex justify-center flex-col sm:flex-row">
+        <div className="grid grid-cols-[minmax(200px,1fr)_1fr] ">
           <TodoList />
           <DayTasks />
         </div>
